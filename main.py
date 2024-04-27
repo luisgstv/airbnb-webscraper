@@ -103,7 +103,7 @@ class Scraper:
                 house_type = house_type[0].text.replace('\n', '')
 
             try: 
-                description = description.find('span').text
+                description = description.find('span').text.replace('\n', '')
             except AttributeError:
                 description = None
 
