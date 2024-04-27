@@ -120,11 +120,17 @@ class Scraper:
             self.data.append([title, house_type, description, price, rating, url])
 
     def next_page(self):
-        # Going to the next page and waiting for it to load all the cards
+        # Going to the next page
         self.driver.find_elements(By.XPATH, '//*[@id="site-content"]//nav//a')[-1].click()
 
-        while len(self.driver.find_elements(By.XPATH, '//*[@id="site-content"]//*[@data-testid="listing-card-title"]')) < len(self.stays):
-            self.driver.implicitly_wait(0.2)
+        # Waiting for elements to appear two times to avoid errors
+        WebDriverWait(self.driver, 5).until(
+            EC.presence_of_all_elements_located((By.XPATH, '//*[@itemprop="itemListElement"]//img'))
+            
+        )
+        WebDriverWait(self.driver, 5).until(
+            EC.presence_of_all_elements_located((By.XPATH, '//*[@id="site-content"]//*[@data-testid="listing-card-title"]'))
+        )
 
         self.page += 1
 
