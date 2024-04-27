@@ -24,6 +24,7 @@ class Scraper:
         # Scraping the pages until it reaches the end
         self.page = 1
         self.data = []
+        print(f'Number of pages to scrape = {self.pages}')
         while True:
             print(f'Moving to the page: {self.page}')
             self.scrape()
@@ -89,7 +90,7 @@ class Scraper:
             title = stay.find('div', attrs={'data-testid': 'listing-card-title'})
             *house_type, description, _ = stay.find_all('div', attrs={'data-testid': 'listing-card-subtitle'})
             price = stay.find('div', attrs={'data-testid': 'price-availability-row'})
-            avaliation = self.driver.find_element(By.XPATH, '//*[@itemprop="itemListElement"]//div/span/span[@aria-hidden="true"]')
+            rating = price.parent.contents[-1].find('span', attrs={'aria-hidden': 'true'})
             url = stay.find('meta', attrs={'itemprop': 'url'})
 
             # Cleaning the data
@@ -108,12 +109,15 @@ class Scraper:
 
             price = price.find('div', attrs={'aria-hidden': 'true'}).find_all('span')[-2].text
 
-            avaliation = avaliation.text
+            try:
+                rating = rating.text
+            except AttributeError:
+                rating = 'No ratings'
 
             url = url['content']
 
             # Appending the data
-            self.data.append([title, house_type, description, price, avaliation, url])
+            self.data.append([title, house_type, description, price, rating, url])
 
     def next_page(self):
         # Going to the next page and waiting for it to load all the cards
@@ -126,7 +130,7 @@ class Scraper:
 
     def save_data_frame(self):
         # Generating the data frame and saving it in CSV and Excel formats
-        data_frame = pd.DataFrame(self.data, columns=['Title', 'Type', 'Description', 'Price', 'Avaliation', 'URL'])
+        data_frame = pd.DataFrame(self.data, columns=['Title', 'Type', 'Description', 'Price', 'Ratings', 'URL'])
         data_frame.to_csv(f'{self.place}.csv', index=False)
         data_frame.to_excel(f'{self.place}.xlsx', index=False)
 
