@@ -4,7 +4,7 @@ This project consists of an Airbnb web scraper that allows you to search any loc
 
 ## Tools and Modules
 
-- This project uses **Selenium** and **BeautifoulSoup4** to scrape each page in the Airbnb website.
+- This project uses **Selenium** and **BeautifulSoup4** to scrape each page in the Airbnb website.
 - The **Pandas** module is used to create the DataFrame for exporting the data to CSV and Excel files.
 - The **Time** module is used to measure the time spent scraping all the pages.
 - The **Math** module is used to calculate the floor value of half the total number of pages to scrape.
